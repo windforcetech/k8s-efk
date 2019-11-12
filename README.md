@@ -7,11 +7,6 @@ K8S ElasticSearch Fluent Kibana集群
 
 同时，对官方配置参数进行优化
 
-## 2. 优化
-
-
-
-以下为其他记录
 ----
 
 ## 批量删除pod
@@ -19,7 +14,6 @@ K8S ElasticSearch Fluent Kibana集群
 
 `kubectl get pods --all-namespaces| grep mysql |awk '{cmd="kubectl delete pod "$2" -n "$1;system(cmd)}'`
 
-## PVC动态创建的
 volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
 
 ### 一、直接挂载
@@ -51,6 +45,7 @@ volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
         		}
   	}
   ]`
+  
 4. 注意，一个pvc只能同时被一个POD使用，如果多个PVC，需要先建立一个PVC池，Client端维护
 这个PVC的Pooling，创建POD的时候，分配没有使用的PVC的name给POD，POD删除后会回收PVC，
 不会删除nfs上的数据。
