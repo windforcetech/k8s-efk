@@ -1,10 +1,23 @@
 # k8s-efk
 K8S ElasticSearch Fluent Kibana集群
 
+---
+## 1. 介绍
+参考kubernetes官方配置进行集群部署https://github.com/kubernetes/kubernetes/tree/master/cluster/addons/fluentd-elasticsearch
+
+同时，对官方配置参数进行优化
+
+## 2. 优化
+
+
+
+以下为其他记录
 ----
 
 ## 批量删除pod
-kubectl -n kube-system  get pods | grep Evicted |awk '{print$1}'|xargs kubectl -n kube-system delete
+`kubectl -n kube-system  get pods | grep Evicted |awk '{print$1}'|xargs kubectl -n kube-system delete`
+
+`kubectl get pods --all-namespaces| grep mysql |awk '{cmd="kubectl delete pod "$2" -n "$1;system(cmd)}'`
 
 ## PVC动态创建的
 volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
@@ -12,6 +25,7 @@ volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
 ### 一、直接挂载
 1. 目前仅支持EmptyDir,NFS,Glusterfs,HostPath四种存储类型，后续将增加其他类型；
 2. 如何使用，通过以下可以，例如申请type为1的nfs存储，可以直接挂载
+
 `"volumeReqs":[
       	{
       		"type":1,
@@ -28,6 +42,7 @@ volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
 但多个POD可以共用一个PVC），但通过PVC的StorageClass可以使用实现动态创建PV，POD不用关心磁盘
 配合从哪来，直接用就可以，详见https://www.cnblogs.com/DaweiJ/articles/8618317.html。
 3. 用法，API请求，注意volumesReq是和containters参数并列的，不在里面，type也必须去掉
+
 `"volumeReqs":[
   	{
   		"name":"nfs-pvc",
