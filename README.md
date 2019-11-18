@@ -55,18 +55,11 @@ K8S ElasticSearch Fluent Kibana集群
 输入：crontab -e
 
 输入内容：分 时 日 月 周 命令
-
 30 23 * * 7 /root/efk/cron-delete-es.sh
-
 然后按Esc输入  :wq   即可。
-
 每周日晚上23：30执行一次。
-
 定时任务执行log文件地址：/var/spool/mail/root 可查看执行错误信息。
-
-
 可以视个人情况调整保留的天数，这里的ip和port同样设置为不存储数据的那台机器。该脚本只需要在ES中一台机器定时运行即可。
-
 crontab -e添加定时任务,每天的凌晨一点清除索引。
 
 `0 1 * * * /search/odin/elasticsearch/scripts/es-index-clear.sh`
@@ -112,8 +105,9 @@ kubectl apply -f fluentd-es-configmap.yaml
 遇到无法删除的
 * `kubectl get pods --all-namespaces| grep mysql |awk '{cmd1="kubectl patch pod "$2" -n "$1" -p '\''""{\"metadata\":{\"finalizers\":null}}""'\''";system(cmd1)}'`
 
+---
+以下为其他内容
 volume支持两种方式，一种是直接挂载，一种是通过PVC挂载
-
 ### 一、直接挂载
 1. 目前仅支持EmptyDir,NFS,Glusterfs,HostPath四种存储类型，后续将增加其他类型；
 2. 如何使用，通过以下可以，例如申请type为1的nfs存储，可以直接挂载
