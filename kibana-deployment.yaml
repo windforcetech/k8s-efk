@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-logging
-  namespace: kube-system
+  namespace: kube-logging
   labels:
     k8s-app: kibana-logging
     addonmanager.kubernetes.io/mode: Reconcile
@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kibana-logging
-        image: docker.elastic.co/kibana/kibana-oss:7.2.0
+        image: 172.16.18.62/public/kibana/kibana-oss:v7.2.0
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:
@@ -29,11 +29,11 @@ spec:
             cpu: 100m
         env:
           - name: ELASTICSEARCH_HOSTS
-            value: http://elasticsearch-logging:9200
+            value: http://10.68.39.141:9200
           - name: SERVER_NAME
             value: kibana-logging
           - name: SERVER_BASEPATH
-            value: /api/v1/namespaces/kube-system/services/kibana-logging/proxy
+            value: /api/v1/namespaces/kube-logging/services/kibana-logging/proxy
           - name: SERVER_REWRITEBASEPATH
             value: "false"
         ports:

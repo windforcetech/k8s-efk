@@ -68,7 +68,7 @@ spec:
     spec:
       serviceAccountName: elasticsearch-logging
       containers:
-      - image: quay.io/fluentd_elasticsearch/elasticsearch:v7.2.0
+      - image: 172.16.18.62/public/elasticsearch:v7.2.0
         name: elasticsearch-logging
         imagePullPolicy: Always
         resources:
@@ -93,9 +93,9 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx10g"
+          value: "-Xms2g -Xmx2g"
         - name: discovery.zen.minimum_master_nodes
-            value: "2"
+          value: "2"
       volumes:
       - name: elasticsearch-logging
         emptyDir: {}

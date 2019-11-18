@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fluentd-es
-  namespace: kube-system
+  namespace: kube-logging
   labels:
     k8s-app: fluentd-es
     addonmanager.kubernetes.io/mode: Reconcile
@@ -35,7 +35,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: fluentd-es
-  namespace: kube-system
+  namespace: kube-logging
   apiGroup: ""
 roleRef:
   kind: ClusterRole
@@ -46,7 +46,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd-es-v2.7.0
-  namespace: kube-system
+  namespace: kube-logging
   labels:
     k8s-app: fluentd-es
     version: v2.7.0
@@ -71,7 +71,7 @@ spec:
       serviceAccountName: fluentd-es
       containers:
       - name: fluentd-es
-        image: quay.io/fluentd_elasticsearch/fluentd:v2.7.0
+        image: 172.16.18.62/public/fluentd:v2.7.0
         env:
         - name: FLUENTD_ARGS
           value: --no-supervisor -q
