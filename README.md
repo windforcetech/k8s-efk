@@ -10,7 +10,6 @@ K8S ElasticSearch Fluent Kibana集群
 ## 2. ElasticSearch调参
 2.1 设置JVM参数
 标准的建议是把 50％ 的可用内存作为 Elasticsearch 的堆内存，保留剩下的 50％,需要修改env参数和mem参数
-
 `resources:
 	  # need more cpu upon initialization, therefore burstable class
 	  limits:
@@ -27,13 +26,6 @@ K8S ElasticSearch Fluent Kibana集群
 		value: "-Xms2g -Xmx10g"
 	- name: discovery.zen.minimum_master_nodes
 		value: "2"`
-
-下载的版本为7.4.2，通过vim ${ES_HOME}/bin/elasticsearch可以看到设置代码
-`# Optionally, exact memory values can be set using the `ES_JAVA_OPTS`. Note that
-# the Xms and Xmx lines in the JVM options file must be commented out. Example
-# values are "512m", and "10g".
-#
-#   ES_JAVA_OPTS="-Xms8g -Xmx8g" ./bin/elasticsearch`
 
 2.2 ES的集群配置
 进入${ES_HOME}/conf/elasticsearch.yml
@@ -60,36 +52,6 @@ K8S ElasticSearch Fluent Kibana集群
 
 2.4 定期删除数据
 如果不删除ES数据，将会导致ES存储的数据越来越多，磁盘满了之后将无法写入新的数据。这时可以使用脚本定时删除过期数据。
-
-`#!/bin/bash
-# @Author: richard
-# @Date:   2017-08-11 17:27:49
-# @Last Modified by:   richard
-# @Last Modified time: 2017-08-11 18:04:58
-#保留近 N 天
-KEEP_DAYS=7 
-# 删除前 N的所有天到 前N+10天==>每天执行
-function get_todelete_days()
-{
-    # declare -A DAY_ARR
-    # DAY_ARR=""
-    for i in $(seq 1 10);
-    do
-        THIS_DAY=$(date -d "$(($KEEP_DAYS+$i)) day ago" +%Y.%m.%d)
- 
-        DAY_ARR=( "${DAY_ARR[@]}" $THIS_DAY)
-    done
-    echo ${DAY_ARR[*]} 
-}
-# 返回数组的写法
-TO_DELETE_DAYS=(`get_todelete_days`)
-for day in "${TO_DELETE_DAYS[@]}"
-do
-    echo "$day will be delete"  
-    curl -XDELETE 'http://127.0.0.1:9200/*-'${day}
-done`
-在目录下启动定时任务执行此文件，
-
 输入：crontab -e
 
 输入内容：分 时 日 月 周 命令
@@ -124,7 +86,9 @@ crontab -e添加定时任务,每天的凌晨一点清除索引。
 3.2 运行yaml文件
 kubectl apply -f fluentd-es-configmap.yaml
 
-！注意，fluent-es-configmap的host需要修改成IP，如果使用到了dns则不用![fluent配置文件](./fluent-es-configmap.png)
+！注意，fluent-es-configmap的host需要修改成IP，如果使用到了dns则不用
+
+![fluent配置文件](./fluent-es-configmap.png)
 
 4. Kibana配置
 4.1 拉取本地镜像
